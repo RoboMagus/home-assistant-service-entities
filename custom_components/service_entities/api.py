@@ -12,24 +12,24 @@ from typing import Any
 import aiohttp
 
 
-class IntegrationBlueprintApiClientError(Exception):
+class ServiceEntitiesApiClientError(Exception):
     """Exception to indicate a general API error."""
 
 
-class IntegrationBlueprintApiClientCommunicationError(
-    IntegrationBlueprintApiClientError,
+class ServiceEntitiesApiClientCommunicationError(
+    ServiceEntitiesApiClientError,
 ):
     """Exception to indicate a communication error."""
 
 
-class IntegrationBlueprintApiClientAuthenticationError(
-    IntegrationBlueprintApiClientError,
+class ServiceEntitiesApiClientAuthenticationError(
+    ServiceEntitiesApiClientError,
 ):
     """Exception to indicate an authentication error."""
 
 
-class IntegrationBlueprintApiClientRateLimitError(
-    IntegrationBlueprintApiClientCommunicationError,
+class ServiceEntitiesApiClientRateLimitError(
+    ServiceEntitiesApiClientCommunicationError,
 ):
     """Exception to indicate the API is rate limiting us."""
 
@@ -55,19 +55,19 @@ def _verify_response_or_raise(response: aiohttp.ClientResponse) -> None:
     """Verify that the response is valid."""
     if response.status in (401, 403):
         msg = "Invalid credentials"
-        raise IntegrationBlueprintApiClientAuthenticationError(
+        raise ServiceEntitiesApiClientAuthenticationError(
             msg,
         )
     if response.status == HTTPStatus.TOO_MANY_REQUESTS:
         msg = "Rate limited by the API"
-        raise IntegrationBlueprintApiClientRateLimitError(
+        raise ServiceEntitiesApiClientRateLimitError(
             msg,
             retry_after=_parse_retry_after(response),
         )
     response.raise_for_status()
 
 
-class IntegrationBlueprintApiClient:
+class ServiceEntitiesApiClient:
     """Sample API Client."""
 
     def __init__(
@@ -118,21 +118,21 @@ class IntegrationBlueprintApiClient:
 
         except TimeoutError as exception:
             msg = f"Timeout error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
+            raise ServiceEntitiesApiClientCommunicationError(
                 msg,
             ) from exception
         except (aiohttp.ClientError, socket.gaierror) as exception:
             msg = f"Error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
+            raise ServiceEntitiesApiClientCommunicationError(
                 msg,
             ) from exception
-        except IntegrationBlueprintApiClientError:
+        except ServiceEntitiesApiClientError:
             # Our own typed errors (auth, rate-limit, communication) are already
             # meaningful; re-raise so callers can branch on them instead of masking
             # them with the broad handler below.
             raise
         except Exception as exception:  # pylint: disable=broad-except
             msg = f"Something really wrong happened! - {exception}"
-            raise IntegrationBlueprintApiClientError(
+            raise ServiceEntitiesApiClientError(
                 msg,
             ) from exception
