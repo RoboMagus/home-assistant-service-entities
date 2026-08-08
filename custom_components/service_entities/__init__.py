@@ -10,14 +10,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.loader import async_get_loaded_integration
-
-from .api import ServiceEntitiesApiClient
-from .const import DOMAIN, LOGGER
-from .coordinator import BlueprintDataUpdateCoordinator
-from .data import ServiceEntitiesData
+from homeassistant.const import Platform
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -32,27 +25,8 @@ async def async_setup_entry(
     hass: HomeAssistant,
     entry: ServiceEntitiesConfigEntry,
 ) -> bool:
-    """Set up this integration using UI."""
-    coordinator = BlueprintDataUpdateCoordinator(
-        hass=hass,
-        logger=LOGGER,
-        name=DOMAIN,
-        update_interval=timedelta(hours=1),
-        config_entry=entry,
-    )
-    entry.runtime_data = ServiceEntitiesData(
-        client=ServiceEntitiesApiClient(
-            username=entry.data[CONF_USERNAME],
-            password=entry.data[CONF_PASSWORD],
-            session=async_get_clientsession(hass),
-        ),
-        integration=async_get_loaded_integration(hass, entry.domain),
-        coordinator=coordinator,
-    )
-
-    # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
-    await coordinator.async_config_entry_first_refresh()
-
+    """Set up this integration from a config entry."""
+    entry.runtime_data = {}
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True

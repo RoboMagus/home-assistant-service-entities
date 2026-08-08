@@ -2,24 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
-    from homeassistant.loader import Integration
 
-    from .api import ServiceEntitiesApiClient
-    from .coordinator import BlueprintDataUpdateCoordinator
-
-
-type ServiceEntitiesConfigEntry = ConfigEntry[ServiceEntitiesData]
-
-
-@dataclass
-class ServiceEntitiesData:
-    """Data for the Blueprint integration."""
-
-    client: ServiceEntitiesApiClient
-    coordinator: BlueprintDataUpdateCoordinator
-    integration: Integration
+type ServiceEntitiesConfigEntry = ConfigEntry[dict[str, Any]]

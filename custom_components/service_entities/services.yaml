@@ -1,0 +1,19 @@
+set_entity:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: service_entities
+          domain: sensor
+    state:
+      required: true
+    # Optionals:
+    name:
+      required: false
+    icon:
+      required: false
+    unit_of_measurement:
+      required: false
+    attributes:
+      required: false

@@ -1,12 +1,10 @@
 {
   "domain": "service_entities",
   "name": "Service Entities",
-  "codeowners": [
-    "@RoboMagus"
-  ],
+  "codeowners": ["@RoboMagus"],
   "config_flow": true,
   "documentation": "https://github.com/RoboMagus/service_entities",
-  "iot_class": "cloud_polling",
+  "integration_type": "service",
   "issue_tracker": "https://github.com/RoboMagus/service_entities/issues",
   "version": "0.1.0"
 }
