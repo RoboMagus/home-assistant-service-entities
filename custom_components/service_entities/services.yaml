@@ -17,3 +17,12 @@ set_entity:
       required: false
     attributes:
       required: false
+
+delete_entity:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: service_entities
+          domain: sensor
