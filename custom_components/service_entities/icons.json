@@ -1,0 +1,10 @@
+{
+  "services": {
+    "set_entity": {
+      "service": "mdi:import"
+    },
+    "delete_entity": {
+      "service": "mdi:delete"
+    }
+  }
+}
