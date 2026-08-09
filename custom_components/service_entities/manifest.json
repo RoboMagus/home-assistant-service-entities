@@ -7,5 +7,6 @@
   "integration_type": "service",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/RoboMagus/service_entities/issues",
+  "single_config_entry": true,
   "version": "0.1.0"
 }
