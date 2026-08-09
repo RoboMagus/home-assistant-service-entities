@@ -5,6 +5,7 @@
   "config_flow": true,
   "documentation": "https://github.com/RoboMagus/service_entities",
   "integration_type": "service",
+  "iot_class": "local_push",
   "issue_tracker": "https://github.com/RoboMagus/service_entities/issues",
   "version": "0.1.0"
 }
