@@ -5,12 +5,12 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any, override
 
+import homeassistant.helpers.entity_registry as er
 import voluptuous as vol
-from homeassistant.exceptions import ServiceValidationError
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import async_get_platforms
-import homeassistant.helpers.entity_registry as er
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util.async_ import run_callback_threadsafe
 
@@ -99,7 +99,8 @@ async def async_setup_entry(
         DOMAIN,
         "set_entity",
         entry.sensor_manager.handle_service_call,
-        # Note: Name, Icon and UoM are ONLY used when creating new entities. They are ignored when updating existing ones!
+        # Note: Name, Icon and UoM are ONLY used when creating new entities.
+        #       They are ignored when updating existing ones!
         schema=vol.Schema(
             {
                 vol.Required("entity_id"): cv.entity_id,
