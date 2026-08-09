@@ -17,10 +17,10 @@ from homeassistant.util.async_ import run_callback_threadsafe
 from .const import DOMAIN
 
 if TYPE_CHECKING:
+    from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant, ServiceCall
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-    from .data import ServiceEntitiesConfigEntry
 
 LOGGER = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class SensorManager:
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ServiceEntitiesConfigEntry,
+    entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the sensor platform."""

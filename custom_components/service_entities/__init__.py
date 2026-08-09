@@ -12,9 +12,8 @@ from typing import TYPE_CHECKING
 from homeassistant.const import Platform
 
 if TYPE_CHECKING:
+    from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
-
-    from .data import ServiceEntitiesConfigEntry
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
@@ -22,7 +21,7 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ServiceEntitiesConfigEntry,
+    entry: ConfigEntry,
 ) -> bool:
     """Set up this integration from a config entry."""
     entry.runtime_data = {}
@@ -33,7 +32,7 @@ async def async_setup_entry(
 
 async def async_unload_entry(
     hass: HomeAssistant,
-    entry: ServiceEntitiesConfigEntry,
+    entry: ConfigEntry,
 ) -> bool:
     """Handle removal of an entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
