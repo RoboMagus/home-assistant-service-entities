@@ -9,13 +9,13 @@ set_entity:
     state:
       required: true
     # Optionals:
+    attributes:
+      required: false
     name:
       required: false
     icon:
       required: false
     unit_of_measurement:
-      required: false
-    attributes:
       required: false
 
 delete_entity:

@@ -36,7 +36,6 @@ class SensorManager:
         self.entities = {}
 
         entries = self.er.entities.get_entries_for_config_entry_id(config_entry_id)
-        LOGGER.debug("Sensor entries: %r", entries)
         for e in entries:
             self.entities[e.entity_id] = ServiceEntitiesSensor(
                 hass,
@@ -49,6 +48,7 @@ class SensorManager:
                 ),
                 e.entity_id,
             )
+        # Setup existing entries:
         async_add_entities(self.entities.values())
 
     def handle_service_call(self, service: ServiceCall) -> None:
@@ -60,8 +60,6 @@ class SensorManager:
                 msg = f"Entity ID '{entity_id}' already exists and does not belong to the service_entities integration"
                 raise ServiceValidationError(msg)
 
-            platforms = async_get_platforms(self.hass, DOMAIN)
-            LOGGER.warning("PLATFORMS: %r", platforms)
             new_sensor = ServiceEntitiesSensor(
                 self.hass,
                 SensorEntityDescription(
@@ -72,6 +70,8 @@ class SensorManager:
                 ),
                 entity_id,
             )
+            # Add entity using platform, as 'async_add_entities' task will have been destroyed after init stage
+            platforms = async_get_platforms(self.hass, DOMAIN)
             platforms[0].add_entities([new_sensor])
             self.entities[entity_id] = new_sensor
 
@@ -148,12 +148,13 @@ class ServiceEntitiesSensor(RestoreEntity, SensorEntity):
         """Subscribe to the node and subnode event emitters."""
         await super().async_added_to_hass()
         if last_state := await self.async_get_last_state():
+            LOGGER.debug("%s restore state: %r", self.entity_id, last_state)
             self._attr_native_value = last_state.state
             self._attr_extra_state_attributes = last_state.attributes
 
     def set(self, state: Any) -> None:
         """Set sensor state."""
-        LOGGER.debug("%s::set %r", self.entity_id, state)
+        LOGGER.debug("%s set: %r", self.entity_id, state)
 
         self._attr_native_value = state.get("state")
         self._attr_extra_state_attributes = state.get("attributes", None)

@@ -1,21 +1,69 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "description": "If you need help with the configuration have a look here: {documentation_url}",
-                "data": {
-                    "username": "Username",
-                    "password": "Password"
-                }
-            }
-        },
-        "error": {
-            "auth": "Username/Password is wrong.",
-            "connection": "Unable to connect to the server.",
-            "unknown": "Unknown error occurred."
-        },
-        "abort": {
-            "already_configured": "This entry is already configured."
+  "config": {
+    "step": {
+      "user": {
+        "description": "If you need help with the configuration have a look here: {documentation_url}",
+        "data": {
+          "username": "Username",
+          "password": "Password"
         }
+      }
+    },
+    "error": {
+      "auth": "Username/Password is wrong.",
+      "connection": "Unable to connect to the server.",
+      "unknown": "Unknown error occurred."
+    },
+    "abort": {
+      "already_configured": "This entry is already configured."
     }
+  },
+  "services": {
+    "set_entity": {
+      "name": "Set entity",
+      "description": "Set entity state",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "entity_id of sensor to create or update",
+          "example": "sensor.foobar"
+        },
+        "state": {
+          "name": "State",
+          "description": "Update sensor state",
+          "example": "42"
+        },
+        "attributes": {
+          "name": "Attributes",
+          "description": "Update sensor attributes"
+        },
+        "name": {
+          "name": "Name",
+          "description": "New sensor name (Only used when creating new sensor)",
+          "example": "Foobar service-created entity"
+        },
+        "icon": {
+          "name": "Icon",
+          "description": "New sensor icon (Only used when creating new sensor)",
+          "example": "mdi:console"
+        },
+        "unit_of_measurement": {
+          "name": "Unit of measurement",
+          "description": "New sensor units (Only used when creating new sensor)",
+          "example": "flubs"
+        }
+      }
+    },
+    "delete_entity": {
+      "name": "Delete entity",
+      "description": "Delete entity",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "entity_id of sensor to delete",
+          "example": "sensor.foobar"
+        }
+      }
+    }
+  }
 }
