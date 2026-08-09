@@ -2,26 +2,35 @@ set_entity:
   fields:
     entity_id:
       required: true
+      example: sensor.foobar
       selector:
         entity:
           integration: service_entities
           domain: sensor
     state:
       required: true
+      example: 42
     # Optionals:
     attributes:
       required: false
+      example:
+        attribute_1: 42
+        attribute_2: Last Wednesday
     name:
       required: false
+      example: Generated sensor entity
     icon:
       required: false
+      example: mdi:robot-excited
     unit_of_measurement:
       required: false
+      example: flubs
 
 delete_entity:
   fields:
     entity_id:
       required: true
+      example: sensor.foobar
       selector:
         entity:
           integration: service_entities
