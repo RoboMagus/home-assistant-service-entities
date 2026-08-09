@@ -24,6 +24,23 @@ if TYPE_CHECKING:
 
 LOGGER = logging.getLogger(__name__)
 
+SET_ENTITY_SCHEMA = vol.Schema(
+    {
+        vol.Required("entity_id"): cv.entity_id,
+        vol.Required("state"): cv.string,
+        vol.Optional("name"): cv.string,
+        vol.Optional("icon"): cv.icon,
+        vol.Optional("unit_of_measurement"): cv.string,
+        vol.Optional("attributes"): vol.Schema({}, extra=True),
+    }
+)
+
+DELETE_ENTITY_SCHEMA = vol.Schema(
+    {
+        vol.Required("entity_id"): cv.entity_id,
+    }
+)
+
 
 class SensorManager:
     """Sensor Manager."""
@@ -60,6 +77,7 @@ class SensorManager:
                 msg = f"Entity ID '{entity_id}' already exists and does not belong to the service_entities integration"
                 raise ServiceValidationError(msg)
 
+            LOGGER.info("Creating new sensor: %r", service.data)
             new_sensor = ServiceEntitiesSensor(
                 self.hass,
                 SensorEntityDescription(
@@ -79,7 +97,7 @@ class SensorManager:
 
     async def delete_entity(self, service: ServiceCall) -> None:
         """Delete entity."""
-        LOGGER.debug("delete_entity: %r", service.data)
+        LOGGER.info("delete_entity: %r", service.data)
         entity_id = service.data.get("entity_id")
         if entity_id in self.entities:
             self.er.async_remove(entity_id)
@@ -99,29 +117,14 @@ async def async_setup_entry(
         DOMAIN,
         "set_entity",
         entry.sensor_manager.handle_service_call,
-        # Note: Name, Icon and UoM are ONLY used when creating new entities.
-        #       They are ignored when updating existing ones!
-        schema=vol.Schema(
-            {
-                vol.Required("entity_id"): cv.entity_id,
-                vol.Required("state"): cv.string,
-                vol.Optional("name"): cv.string,
-                vol.Optional("icon"): cv.icon,
-                vol.Optional("unit_of_measurement"): cv.string,
-                vol.Optional("attributes"): vol.Schema({}, extra=True),
-            }
-        ),
+        schema=SET_ENTITY_SCHEMA,
     )
 
     hass.services.async_register(
         DOMAIN,
         "delete_entity",
         entry.sensor_manager.delete_entity,
-        schema=vol.Schema(
-            {
-                vol.Required("entity_id"): cv.entity_id,
-            }
-        ),
+        schema=DELETE_ENTITY_SCHEMA,
     )
 
 
@@ -142,7 +145,7 @@ class ServiceEntitiesSensor(RestoreEntity, SensorEntity):
         self.entity_description = entity_description
         self.entity_id = entity_id
 
-        self._attr_unique_id = f"service_entity__{entity_id}"
+        self._attr_unique_id = entity_description.key
 
     @override
     async def async_added_to_hass(self) -> None:
@@ -155,9 +158,10 @@ class ServiceEntitiesSensor(RestoreEntity, SensorEntity):
 
     def set(self, state: Any) -> None:
         """Set sensor state."""
-        LOGGER.debug("%s set: %r", self.entity_id, state)
+        LOGGER.info("%s set: %r", self.entity_id, state)
 
         self._attr_native_value = state.get("state")
         self._attr_extra_state_attributes = state.get("attributes", None)
 
+        # Ensure state update is only performed in event loop:
         run_callback_threadsafe(self.hass.loop, self.async_write_ha_state).result()

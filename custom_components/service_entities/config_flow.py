@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import logging
 from typing import Any, override
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.loader import async_get_loaded_integration
 
 from .const import DEFAULT_NAME, DOMAIN
-
-LOGGER = logging.getLogger(__name__)
 
 
 class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
