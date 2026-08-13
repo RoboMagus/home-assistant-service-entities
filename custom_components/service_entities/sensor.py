@@ -163,5 +163,13 @@ class ServiceEntitiesSensor(RestoreEntity, SensorEntity):
         self._attr_native_value = state.get("state")
         self._attr_extra_state_attributes = state.get("attributes", None)
 
+        if icon := state.get("icon", None):
+            self._attr_icon = icon
+            run_callback_threadsafe(self.hass.loop, self._update_icon).result()
+
         # Ensure state update is only performed in event loop:
         run_callback_threadsafe(self.hass.loop, self.async_write_ha_state).result()
+
+    def _update_icon(self) -> None:
+        """Update entity registry icon."""
+        er.async_get(self.hass).async_update_entity(self.entity_id, original_icon=self._attr_icon)

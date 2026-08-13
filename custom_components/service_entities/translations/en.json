@@ -25,15 +25,15 @@
           "name": "Attributes",
           "description": "Update sensor attributes"
         },
+        "icon": {
+          "name": "Icon",
+          "description": "Update sensor icon",
+          "example": "mdi:console"
+        },
         "name": {
           "name": "Name",
           "description": "New sensor name (Only used when creating new sensor)",
           "example": "Foobar service-created entity"
-        },
-        "icon": {
-          "name": "Icon",
-          "description": "New sensor icon (Only used when creating new sensor)",
-          "example": "mdi:console"
         },
         "unit_of_measurement": {
           "name": "Unit of measurement",
